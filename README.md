@@ -1,3 +1,3 @@
 # 21M
 
-How much for 1 BTC ?
+How much left for 1 BTC ?
