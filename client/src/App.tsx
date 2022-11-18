@@ -1,12 +1,15 @@
 import { GlobalStyle } from './styles/GlobalStyle'
 import AppRoutes from './routes'
+import { ProfileProvider } from './hooks/perfil'
 
 export function App() {
   return (
     <>
-      <AppRoutes />
-      <GlobalStyle />
- 
+      <ProfileProvider>
+        <AppRoutes />
+        <GlobalStyle />
+      </ProfileProvider>
+
     </>
   )
 }

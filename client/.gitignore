@@ -3,3 +3,5 @@ dist
 packages
 .webpack
 out
+.env
+.yarn.lock
