@@ -2,7 +2,7 @@
 import { Avatar } from "antd"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import defaultAvatar from "../../../assets/avatar.png"
+import defaultAvatar from "../../../assets/icon.png"
 import { useProfile } from "../../hooks/perfil"
 import { IProfile } from "./models"
 import { profileList } from "./services/index.service"
