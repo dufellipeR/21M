@@ -17,10 +17,10 @@ class DashboardList(generics.ListAPIView):
 
     def list(self, request, *args, **kwargs):
 
-        q = self.request.query_params.get('q')
+        perfil = self.request.query_params.get('perfil')
 
-        if q:
-            perfil_transactions = self.queryset.filter(perfil=q)
+        if perfil:
+            perfil_transactions = self.queryset.filter(perfil=perfil)
         else:
             perfil_transactions = self.queryset
 
