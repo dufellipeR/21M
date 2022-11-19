@@ -1,5 +1,5 @@
 
-import { Avatar } from "antd"
+import { Avatar, Space } from "antd"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import defaultAvatar from "../../../assets/icon.png"
@@ -20,7 +20,7 @@ const ProfileSelector: React.FC<any> = () => {
         console.log(profile);
         updateProfile(profile)
         navigate('/dashboard')
-        
+
     }
 
     useEffect(() => {
@@ -35,15 +35,17 @@ const ProfileSelector: React.FC<any> = () => {
         <>
             <h1 style={{ textAlign: 'center' }}>Choose Profile</h1>
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                {!!profiles.length && profiles.map((profile) => (
-                    <button key={profile.id} type="button" onClick={() => profileChoosen(profile)} style={{ border: 0, backgroundColor: 'transparent', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center', margin: 10 }}>
-                        <Avatar
-                            src={defaultAvatar}
-                            size={{ xs: 32, sm: 40, md: 64, lg: 80, xl: 100, xxl: 100 }}
-                        />
-                        <span style={{ color: "#606060"}}>{profile.name}</span>
-                    </button>
-                ))}
+                <Space size="large">
+                    {!!profiles.length && profiles.map((profile) => (
+                        <button key={profile.id} type="button" onClick={() => profileChoosen(profile)} style={{ border: 0, backgroundColor: 'transparent', cursor: 'pointer', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                            <Avatar
+                                src={defaultAvatar}
+                                size={{ xs: 32, sm: 40, md: 64, lg: 80, xl: 100, xxl: 100 }}
+                            />
+                            <span style={{ color: "#606060" }}>{profile.name}</span>
+                        </button>
+                    ))}
+                </Space>
             </div>
         </>
     )

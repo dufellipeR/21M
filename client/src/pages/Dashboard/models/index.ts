@@ -18,10 +18,19 @@ export interface ICoinGecko {
     }
 }
 
-export interface IDolar { 
+export interface IDolar {
     value: [
         {
             cotacaoVenda: number
         }
     ]
+}
+
+export interface ITransaction {
+    amount: number
+    created_at: string
+    id: number
+    price: number
+    side: number
+    total: number
 }

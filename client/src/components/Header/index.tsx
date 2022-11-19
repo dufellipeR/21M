@@ -1,4 +1,5 @@
-import { Avatar, Col, Divider, Radio, Row, Segmented, } from "antd"
+import { Avatar, Col, Divider, Radio, Row, Segmented, Space, } from "antd"
+import { SegmentedValue } from "antd/es/segmented"
 import { useEffect, useState } from "react"
 import { useCurrency } from "../../hooks/currency"
 import { useFormat } from "../../hooks/format"
@@ -18,10 +19,10 @@ const optionsFormat = [
 
 export const Header: React.FC<any> = () => {
 
-    const [segmentOpt, setSegmentOpt] = useState<{ label: any, value: any }[]>([])
+    const [segmentOpt, setSegmentOpt] = useState<{ label: any, value: number }[]>([])
     const [profiles, setProfiles] = useState<IProfile[]>([])
 
-    const { updateProfile } = useProfile()
+    const { profile, updateProfile } = useProfile()
 
     const { currency, updateCurrency } = useCurrency()
     const { format, updateFormat } = useFormat()
@@ -30,23 +31,27 @@ export const Header: React.FC<any> = () => {
         profileList().then((data) => {
 
             setProfiles(data)
-            setSegmentOpt(data.map(profile => {
+            setSegmentOpt(data.map(_profile => {
                 return {
                     label: (
                         <div style={{ padding: 4 }}>
-                            <Avatar src={`https://joeschmoe.io/api/v1/${profile.id}`} />
-                            <div>{profile.name}</div>
+                            <Avatar src={`https://joeschmoe.io/api/v1/${_profile.id}${_profile.name}`} />
+                            <div>{_profile.name}</div>
                         </div>
                     ),
-                    value: profile
+                    value: _profile.id
                 }
             }))
 
         })
     }, [])
 
-    const handleSwitchProfile = (profile: any) => {
-        updateProfile(profile)
+    const handleSwitchProfile = (id: any) => {
+        const selectedProfile = profiles.find((i) => id === i.id)
+        if (selectedProfile) {
+            updateProfile(selectedProfile)
+        }
+
     }
 
     return (
@@ -55,25 +60,27 @@ export const Header: React.FC<any> = () => {
             <Row style={{ marginTop: 24 }}>
                 <Col offset={1} span={20}>
                     <Segmented
-                        options={segmentOpt} onResize={undefined} onResizeCapture={undefined} onChange={handleSwitchProfile} />
+                        options={segmentOpt} value={profile.id} onResize={undefined} onResizeCapture={undefined} onChange={handleSwitchProfile} />
                 </Col>
                 <Col span={2} >
-                    <Radio.Group
-                        style={{ marginBottom: 10 }}
-                        options={optionsFormat}
-                        onChange={(e) => updateFormat(e.target.value)}
-                        value={format}
-                        optionType="button"
-                        buttonStyle="solid"
-                    />
-                    <Radio.Group
+                    <Space size="small" direction="vertical" >
+                        <Radio.Group
+                            options={optionsFormat}
+                            onChange={(e) => updateFormat(e.target.value)}
+                            value={format}
+                            optionType="button"
+                            buttonStyle="solid"
+                        />
+                        <Radio.Group
 
-                        options={optionsCurrency}
-                        onChange={(e) => updateCurrency(e.target.value)}
-                        value={currency}
-                        optionType="button"
-                        buttonStyle="outline"
-                    />
+                            options={optionsCurrency}
+                            onChange={(e) => updateCurrency(e.target.value)}
+                            value={currency}
+                            optionType="button"
+                            buttonStyle="outline"
+                        />
+                    </Space>
+
 
                 </Col>
 
