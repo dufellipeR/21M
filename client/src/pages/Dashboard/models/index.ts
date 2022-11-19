@@ -16,6 +16,12 @@ export interface ICoinGecko {
         }
         price_change_percentage_24h: number,
     }
+}
 
-
+export interface IDolar { 
+    value: [
+        {
+            cotacaoVenda: number
+        }
+    ]
 }
