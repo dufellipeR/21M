@@ -13,7 +13,7 @@ const Dashboard: React.FC<any> = () => {
         <>
             <Header />
             <Tabs
-                defaultActiveKey="transactions"
+                defaultActiveKey="home"
                 centered
                 items={items}
             />

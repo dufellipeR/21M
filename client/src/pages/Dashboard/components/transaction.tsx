@@ -102,8 +102,15 @@ export const Transaction: React.FC<any> = () => {
     }, [format, currency, dolar])
 
     useEffect(() => {
-        TransactionList(profile.id).then(data => setTransactions(data))
-    }, [profile])
+        const controller = new AbortController()
+        const signal = controller.signal
+
+        TransactionList(profile.id, signal).then(data => setTransactions(data))
+
+        return () => {
+            controller.abort()
+        }
+    }, [profile.id])
 
     return (
         <Row>

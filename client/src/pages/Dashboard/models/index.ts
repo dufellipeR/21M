@@ -1,7 +1,9 @@
 /* eslint-disable camelcase */
 export interface IDashboardList {
     amount: number | undefined,
-    average: number | undefined,
+    average_buy: number | undefined,
+    average_sell: number | undefined,
+
 }
 
 export interface ICoinGecko {

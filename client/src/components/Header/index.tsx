@@ -28,8 +28,9 @@ export const Header: React.FC<any> = () => {
     const { format, updateFormat } = useFormat()
 
     useEffect(() => {
-        profileList().then((data) => {
 
+
+        profileList().then((data) => {
             setProfiles(data)
             setSegmentOpt(data.map(_profile => {
                 return {
@@ -42,8 +43,8 @@ export const Header: React.FC<any> = () => {
                     value: _profile.id
                 }
             }))
-
         })
+
     }, [])
 
     const handleSwitchProfile = (id: any) => {
@@ -60,7 +61,7 @@ export const Header: React.FC<any> = () => {
             <Row style={{ marginTop: 24 }}>
                 <Col offset={1} span={20}>
                     <Segmented
-                        options={segmentOpt} value={profile.id} onResize={undefined} onResizeCapture={undefined} onChange={handleSwitchProfile} />
+                        options={segmentOpt} value={profile.id} onResize={() => {}} onResizeCapture={() => {}} onChange={handleSwitchProfile} />
                 </Col>
                 <Col span={2} >
                     <Space size="small" direction="vertical" >

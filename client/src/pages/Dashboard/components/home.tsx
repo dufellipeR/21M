@@ -1,5 +1,5 @@
-import { ArrowDownOutlined, ArrowUpOutlined } from "@ant-design/icons"
-import { Col, Progress, Row, Statistic, Typography } from "antd"
+
+import { Badge, Col, Progress, Row, Space, Statistic, Typography } from "antd"
 import { useEffect, useState } from "react"
 import { useCurrency } from "../../../hooks/currency"
 import { useFormat } from "../../../hooks/format"
@@ -19,7 +19,10 @@ export const Home: React.FC<any> = () => {
     const [dolar, setDolar] = useState<number>(0)
 
     useEffect(() => {
-        DashboardList(profile.id).then((data) => {
+        const controller = new AbortController()
+        const signal = controller.signal
+
+        DashboardList(profile.id, signal).then((data) => {
             setDashboard(data)
         })
 
@@ -30,18 +33,21 @@ export const Home: React.FC<any> = () => {
         DolarInfo().then((data) => {
             setDolar(data[0].cotacaoVenda)
         })
-    }, [profile])
+
+        return () => {
+            controller.abort()
+        }
+    }, [profile.id])
 
     useEffect(() => {
-        console.log(Math.trunc((profile.goal || 1) / (dashboard.amount || 0.0) / 10));
 
         if (profile.goal < (dashboard.amount || 0)) {
             setPercentage(100)
-        } else {
-            setPercentage(Math.trunc(((profile.goal || 1) / (dashboard.amount || 0.0)) / 10))
+        } else {            
+            setPercentage(Math.trunc( ((dashboard.amount || 0.0) / (profile.goal || 1)) * 100))
         }
 
-    }, [dashboard])
+    }, [dashboard.amount])
 
 
     return (
@@ -55,51 +61,57 @@ export const Home: React.FC<any> = () => {
                     </Col>
                 </Row>
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
+                        <Space direction="vertical" size={"large"}>
+                            {format === 'btc' ? (
+                                <Statistic title="Bitcoin Amount (BTC)" value={dashboard.amount} precision={8} />
+                            ) : (
+                                <Statistic title="Bitcoin Amount (SAT)" value={(dashboard.amount || 0) * 100000000} precision={0} />
+                            )}
+
+                            {currency === 'usd' ? (
+                                <Statistic title="Average Buy Price ($)" prefix="$" value={(dashboard.average_buy || 0) / dolar} precision={2} />
+                            ) : (
+                                <Statistic title="Average Buy Price (R$)" prefix="R$" value={dashboard.average_buy} precision={2} />
+                            )}
+                        </Space>
+
+                    </Col>
+                    <Col span={8}>
+                        <Space direction="vertical" size={"large"}>
+                            {!!marketInfo && (
+                                <>
+                                    <Statistic title="Market Price (24h)" prefix={currency === 'usd' ? ("$") : ('R$')} suffix={
+                                        <Badge style={marketInfo.market_data.price_change_percentage_24h < 0 ? { backgroundColor: '#f5222d' } : { backgroundColor: '#52c41a' }} count={`${new Intl.NumberFormat('en-US', { maximumFractionDigits: 2 }).format(marketInfo.market_data.price_change_percentage_24h)} %`} />
+                                    } value={marketInfo.market_data.current_price[currency]} precision={2} />
+
+                                    {currency === 'usd' ? (
+                                        <Statistic title="Total Fiat ($)" prefix="$" value={(dashboard.amount || 0) * marketInfo.market_data.current_price[currency]} precision={2} />
+                                    ) : (
+                                        <Statistic title="Total Fiat (R$)" prefix="R$" value={(dashboard.amount || 0) * marketInfo.market_data.current_price[currency]} precision={2} />
+                                    )}
+                                </>
+                            )}
+                        </Space>
+
+                        {/* {currency === 'usd' ? (
+                            <Statistic title="Average Sell Price ($)" prefix="$" value={(dashboard.average_sell || 0) / dolar} precision={2} />
+                        ) : (
+                            <Statistic title="Average Sell Price (R$)" prefix="R$" value={dashboard.average_sell} precision={2} />
+                        )} */}
+
+                    </Col>
+                    {/* 
+                        Add GOAL REACH mode with lottie bitcoin animation
+                    */}
+                    {/* <Col span={8}>
                         {format === 'btc' ? (
-                            <Statistic title="Bitcoin Amount (BTC)" value={dashboard.amount} precision={8} />
+                            <Statistic title="Total Fiat Spent (BTC)" value={dashboard.amount} precision={8} />
                         ) : (
-                            <Statistic title="Bitcoin Amount (SAT)" value={(dashboard.amount || 0) * 100000000} precision={0} />
+                            <Statistic title="Total Fiat Spent (SAT)" value={(dashboard.amount || 0) * 100000000} precision={0} />
                         )}
 
-                        {currency === 'usd' ? (
-                            <Statistic title="Average Price ($)" prefix="$" value={(dashboard.average || 0) / dolar} precision={2} />
-                        ) : (
-                            <Statistic title="Average Price (R$)" prefix="R$" value={dashboard.average} precision={2} />
-                        )}
-
-                    </Col>
-                    <Col span={12}>
-                        {!!marketInfo && (
-                            <>
-
-                                <Statistic title="Market Price (24h)"  prefix={currency === 'usd' ? ("$") : ('R$')} value={marketInfo.market_data.current_price[currency]} precision={2} />
-                                {marketInfo.market_data.price_change_percentage_24h > 0 ? (
-                                    <Statistic
-
-                                        value={marketInfo.market_data.price_change_percentage_24h}
-                                        precision={2}
-                                        valueStyle={{ color: '#3f8600' }}
-                                        prefix={<ArrowUpOutlined />}
-                                        suffix="%"
-                                    />
-                                ) : (
-                                    <Statistic
-
-                                        value={marketInfo.market_data.price_change_percentage_24h}
-                                        precision={2}
-                                        valueStyle={{ color: '#cf1322' }}
-                                        prefix={<ArrowDownOutlined />}
-                                        suffix="%"
-                                    />
-                                )}
-
-                            </>
-
-
-                        )}
-
-                    </Col>
+                    </Col> */}
                 </Row>
             </Col>
         </Row>

@@ -2,9 +2,10 @@ import api from "../../../services/api";
 import gecko from "../../../services/gecko";
 import dolar from "../../../services/dolar";
 import { ICoinGecko, IDashboardList, IDolar, ITransaction } from "../models";
+import { GenericAbortSignal } from "axios";
 
-export const DashboardList = async (perfil: number) => {
-    const { data } = await api.get<IDashboardList>(`/transaction/dashboard/?perfil=${perfil}`);
+export const DashboardList = async (perfil: number, signal: GenericAbortSignal) => {
+    const { data } = await api.get<IDashboardList>(`/transaction/dashboard/?perfil=${perfil}`, { signal});
 
     return data
 }
@@ -21,8 +22,8 @@ export const DolarInfo = async () => {
     return data.value
 }
 
-export const TransactionList = async (perfil: number) => {
-    const { data } = await api.get<ITransaction[]>(`/transaction/?perfil=${perfil}`);
+export const TransactionList = async (perfil: number, abortSignal: GenericAbortSignal ) => {
+    const { data } = await api.get<ITransaction[]>(`/transaction/?perfil=${perfil}` , { signal: abortSignal});
 
     return data
 }

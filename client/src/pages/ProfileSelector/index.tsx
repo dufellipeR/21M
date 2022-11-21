@@ -25,7 +25,6 @@ const ProfileSelector: React.FC<any> = () => {
 
     useEffect(() => {
         profileList().then((data) => {
-            console.log(data);
             setProfiles(data)
 
         })
