@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'transaction',
     'perfil',
+    'analysis',
 ]
 
 REST_FRAMEWORK = {
